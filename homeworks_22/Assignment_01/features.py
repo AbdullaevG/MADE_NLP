@@ -76,7 +76,7 @@ class TfIdf(TransformerMixin):
         :param normalize: if True, you must normalize each data sample
         after computing tf-idf features
         """
-        super(self, TfIdf).__init__()
+    
         self.k = k
         self.normalize = normalize
 
