@@ -79,6 +79,7 @@ class TfIdf(TransformerMixin):
     
         self.k = k
         self.normalize = normalize
+        self.alpha = 1e-5
 
         # self.idf[term] = log(total # of documents / # of documents with term in it)
         self.idf = OrderedDict()
@@ -109,7 +110,7 @@ class TfIdf(TransformerMixin):
         # fit method must always return self
         
         self.vocab = [word for (word, count) in self.counter]    
-        self.idf = {word : np.log((self.size +1)/(count + 1)) + 1 for word, count in self.counter}
+        self.idf = {word : np.log((self.size)/(count + self.alpha)) for word, count in self.counter}
         
         return self
 
