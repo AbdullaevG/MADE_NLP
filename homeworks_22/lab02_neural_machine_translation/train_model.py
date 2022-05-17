@@ -64,7 +64,7 @@ def get_loss_on_train(model, iterator, optimizer, criterion, clip, train_history
     return epoch_loss / len(iterator)
 
 
-def get_loss_on_eval(model, iterator, criterion):
+def get_loss_on_val(model, iterator, criterion):
     
     model.eval()
     epoch_loss = 0  
@@ -98,7 +98,8 @@ valid_history = []
 N_EPOCHS = 10
 CLIP = 1
 
-def train(model, 
+def train(model,
+          model_name,
           train_iterator, 
           valid_iterator, 
           optimizer, 
@@ -111,7 +112,7 @@ def train(model,
     best_valid_loss = float('inf')
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-    for epoch in range(N_EPOCHS):
+    for epoch in range(n_epochs):
         start_time = time.time()
         train_loss = get_loss_on_train(model, 
                                        train_iterator, 
@@ -126,7 +127,7 @@ def train(model,
     
         if valid_loss < best_valid_loss:
             best_valid_loss = valid_loss
-            torch.save(model.state_dict(), 'tut1-model.pt')
+            torch.save(model.state_dict(), f'{model_name}.pt')
     
         train_history.append(train_loss)
         valid_history.append(valid_loss)

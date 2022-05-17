@@ -155,5 +155,4 @@ def get_base_line_model(inp_dim,
     model.apply(init_weights)
     return model
 
-
-    
+ 

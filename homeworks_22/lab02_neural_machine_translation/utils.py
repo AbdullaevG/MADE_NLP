@@ -31,3 +31,7 @@ def generate_translation(src, trg, model, TRG_vocab):
     print('Original: {}'.format(' '.join(original)))
     print('Generated: {}'.format(' '.join(generated)))
     print()
+    
+def count_parameters(model):
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
+    
