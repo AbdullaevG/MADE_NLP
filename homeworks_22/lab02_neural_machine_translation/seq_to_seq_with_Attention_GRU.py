@@ -16,18 +16,15 @@ class Encoder(nn.Module):
             num_embeddings=input_dim,
             embedding_dim=emb_dim
         )
-        self.rnn = nn.LSTM(
-            input_size=emb_dim,
-            hidden_size=hid_dim,
-            num_layers=n_layers,
-            dropout=dropout
-        )
+        self.rnn = nn.GRU(emb_dim, hid_dim, bidirectional = True)
         self.dropout = nn.Dropout(p=dropout)
         
     def forward(self, src):
         embedded = self.embedding(src)
         embedded = self.dropout(embedded)
         output, hidden = self.rnn(embedded)
+        #output = [src len, batch size, enc hid dim * 2]
+        #hidden = [batch size, dec hid dim]
         return output, hidden
 
 
@@ -41,24 +38,31 @@ class Decoder(nn.Module):
         self.n_layers = n_layers
         self.embedding = nn.Embedding(num_embeddings=output_dim,
                                       embedding_dim=emb_dim)
-        self.rnn = nn.LSTM(
-            input_size=emb_dim,
-            hidden_size=hid_dim,
-            num_layers=n_layers,
-            dropout=dropout
-        )
+        
+        self.rnn = nn.GRU(emb_dim, hid_dim)
+        
         self.attention = Attention(hid_dim)
-        self.out = nn.Linear(hid_dim*2, output_dim)        
+        self.out = nn.Linear(hid_dim*2, output_dim)
+        self.out_enc = nn.Linear(hid_dim*2, hid_dim)
         self.dropout = nn.Dropout(p=dropout)
         
     def forward(self, input, hidden, enc_seq):
         input = input.unsqueeze(0)
         embedded = self.dropout(self.embedding(input))
+        #embedded = [1, batch size, emb dim]
         
-        output, hidden = self.rnn(embedded, hidden)
+        # hidden = [n_layers*n_directions, batch_size, hid_dim]
+        output, hidden = self.rnn(embedded, hidden[-1].unsqueeze(0))
         
+        # output = [1, batch_size, hid_dim], hid = [1, batch_size, hid_dim]
+        
+        # enc_seq = [src_len, batch size, enc hid dim * 2]
+        # input_1 for attention: query = [batch_size, trg_length=1, hid_dim]
+        # input_2 for attention: context = [batch_size, src_length, hid_dim]
+        
+        enc_seq_transf = self.out_enc(enc_seq)
         attention_output = self.attention(output.transpose(0, 1),
-                                          enc_seq.transpose(0, 1))[0]
+                                          enc_seq_transf.transpose(0, 1))[0]
         attention_output = attention_output.transpose(0, 1)
         
         prediction = self.out((torch.cat([attention_output.squeeze(0), output.squeeze(0)], dim=1)))

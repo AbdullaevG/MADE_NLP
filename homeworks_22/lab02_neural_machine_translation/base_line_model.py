@@ -138,14 +138,14 @@ ENC_DROPOUT = 0.5
 DEC_DROPOUT = 0.5
 
 
-def get_base_line_model(inp_dim,
-                        out_dim,
-                        enc_emb_dim = ENC_EMB_DIM,
-                        dec_emb_dim = DEC_EMB_DIM,
-                        hid_dim = HID_DIM,
-                        n_layers = N_LAYERS,
-                        enc_dropout = ENC_DROPOUT,
-                        dec_dropout = DEC_DROPOUT):
+def get_model(inp_dim,
+              out_dim,
+              enc_emb_dim = ENC_EMB_DIM,
+              dec_emb_dim = DEC_EMB_DIM,
+              hid_dim = HID_DIM,
+              n_layers = N_LAYERS,
+              enc_dropout = ENC_DROPOUT,
+              dec_dropout = DEC_DROPOUT):
     
     enc = Encoder(inp_dim, enc_emb_dim, hid_dim, n_layers, enc_dropout)
     dec = Decoder(out_dim, dec_emb_dim, hid_dim, n_layers, dec_dropout)
