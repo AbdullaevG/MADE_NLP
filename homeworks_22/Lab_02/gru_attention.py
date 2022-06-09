@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torchtext
 import pretr_emb
-
+import random
 
 def emb_layer(num_embed, embedding_dim, field_vocab = None, pretr = False, eng = True):
     if pretr:

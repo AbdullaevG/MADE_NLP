@@ -1,0 +1,20 @@
+Scores of models:
+
+
+Logistic regression for BOW:
+    auc = 0.83
+    
+Naive Bayes for BOW:
+    auc = 0.8366
+
+Naive Bayes for TFIDF:
+    auc = 0.8366
+
+Neural network for BOW:
+    auc = 0.8785
+       
+Neural network for TFIDF:
+    auc = 0.895
+    
+Fro pretrained model:
+    auc = 0.9126

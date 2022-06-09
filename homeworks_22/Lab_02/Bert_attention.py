@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchtext
-
+import random
 
 class Encoder(nn.Module):
     def __init__(self, bert, src_vocab, device):

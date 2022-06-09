@@ -2,7 +2,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchtext
-
+import random
+import math
 
 
 class Encoder(nn.Module):
@@ -54,7 +55,7 @@ class Encoder(nn.Module):
         src_pos = src_pos.permute(1, 0).to(self.device)
         # src_pos = [src sent len, batch size]
         
-        src_embedded = self.dropout(self.src_pos_encoder(src_pos) + src_embedded)
+        src_embedded = self.dropout(self.src_pos_enc(src_pos) + src_embedded)
         # src_embedded = [src sent len, batch size, d_model]
         
         src_padded_mask = (src.cpu() == self.src_pad_index)
@@ -183,9 +184,9 @@ class Seq2Seq(nn.Module):
 
 HID_DIM = 512
 N_HEAD = 8
-N_LAYERS = 2
-DIM_FEEDFORWARD = 1024
-DROPOUT = 0.15
+N_LAYERS = 3
+DIM_FEEDFORWARD = 2048
+DROPOUT = 0.1
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 

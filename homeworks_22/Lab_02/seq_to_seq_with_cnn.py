@@ -3,7 +3,8 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 import torchtext
-
+import math
+import random
 
 
 
@@ -52,7 +53,7 @@ class Encoder(nn.Module):
         src = self.embedding(src) * math.sqrt(self.emb_dim)
          #src = [src_sent len, batch_size, emb_dim]
             
-        embedded = self.pos_encoder(src).permute(1, 2, 0)
+        embedded = self.pos_enc(src).permute(1, 2, 0)
         #embedded = [src_sent_len, batch_size, emb_dim]
         
         output_1 = self.cnn_1(embedded)
@@ -61,11 +62,11 @@ class Encoder(nn.Module):
         
         output_2 = self.cnn_2(embedded)
         output_2 = self.relu(output_2)
-        #output2 = [batch size, hid_dim, src_sent_len_2]
+        #output_2 = [batch size, hid_dim, src_sent_len_2]
         
         output_3 = self.cnn_3(embedded)
         output_3 = self.relu(output_3)
-        #output3 = [batch size, hid_dim, src_sent_len_3]
+        #output_3 = [batch size, hid_dim, src_sent_len_3]
         
         output = torch.cat((output_1, output_2, output_3), dim=-1)
         #output = [batch_size, hid_dim, src_sent_len_1 + src_sent_len_2 + src_sent_len_3]
